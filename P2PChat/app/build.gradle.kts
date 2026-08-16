@@ -95,3 +95,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
+configurations.all {
+    exclude(group = "com.atlassian.commonmark", module = "commonmark")
+}
