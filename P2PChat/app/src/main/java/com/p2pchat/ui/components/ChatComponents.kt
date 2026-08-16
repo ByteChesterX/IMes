@@ -1,10 +1,12 @@
 package com.p2pchat.ui.components
 
 import android.net.Uri
+import android.widget.TextView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,18 +19,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
-import com.halilibo.richtext.ui.material3.RichText
 import com.p2pchat.domain.model.Message
 import com.p2pchat.domain.model.MessageType
 import com.p2pchat.ui.theme.*
+import io.noties.markwon.Markwon
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.compose.foundation.clickable
 
 @Composable
 fun ChatMessageList(
@@ -62,7 +65,7 @@ private fun MessageItem(
     onBlockUser: (String) -> Unit
 ) {
     var showOptions by remember { mutableStateOf(false) }
-    
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = if (isCurrentUser) Arrangement.End else Arrangement.Start
@@ -83,7 +86,7 @@ private fun MessageItem(
                         fontWeight = FontWeight.Bold,
                         color = DiscordBlue
                     )
-                    
+
                     Text(
                         text = " • ${formatTimestamp(message.timestamp)}",
                         style = MaterialTheme.typography.labelSmall,
@@ -91,7 +94,7 @@ private fun MessageItem(
                     )
                 }
             }
-            
+
             // Message bubble
             Box(
                 modifier = Modifier
@@ -110,9 +113,11 @@ private fun MessageItem(
             ) {
                 when (message.messageType) {
                     MessageType.TEXT -> {
-                        RichText {
-                            markdown(message.content)
-                        }
+                        // RichText yerine Markwon ile render edilen Markdown bileşeni
+                        MarkdownText(
+                            markdown = message.content,
+                            color = TextPrimary
+                        )
                     }
                     MessageType.IMAGE -> {
                         message.mediaUri?.let { uri ->
@@ -195,7 +200,7 @@ private fun MessageItem(
                     }
                 }
             }
-            
+
             // Timestamp for current user
             if (isCurrentUser) {
                 Text(
@@ -207,7 +212,7 @@ private fun MessageItem(
             }
         }
     }
-    
+
     // Options dropdown
     if (showOptions && !isCurrentUser) {
         DropdownMenu(
@@ -237,13 +242,13 @@ fun MessageInput(
     modifier: Modifier = Modifier
 ) {
     var selectedFileUri by remember { mutableStateOf<Uri?>(null) }
-    
+
     val filePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         selectedFileUri = uri
     }
-    
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -282,7 +287,7 @@ fun MessageInput(
                     }
                 }
             }
-            
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -290,7 +295,7 @@ fun MessageInput(
                 verticalAlignment = Alignment.Bottom
             ) {
                 // Attachment button
-                IconButton(onClick = { 
+                IconButton(onClick = {
                     filePickerLauncher.launch("*/*")
                 }) {
                     Icon(
@@ -300,7 +305,7 @@ fun MessageInput(
                         modifier = Modifier.size(28.dp)
                     )
                 }
-                
+
                 // Text input
                 TextField(
                     value = value,
@@ -318,7 +323,7 @@ fun MessageInput(
                         .heightIn(min = 44.dp, max = 120.dp),
                     maxLines = 5
                 )
-                
+
                 // Send button
                 IconButton(
                     onClick = {
@@ -337,6 +342,31 @@ fun MessageInput(
             }
         }
     }
+}
+
+// Markwon Entegrasyonu
+@Composable
+private fun MarkdownText(
+    markdown: String,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified
+) {
+    val context = LocalContext.current
+    val markwon = remember(context) { Markwon.create(context) }
+
+    AndroidView(
+        modifier = modifier,
+        factory = { ctx ->
+            TextView(ctx).apply {
+                if (color != Color.Unspecified) {
+                    setTextColor(color.toArgb())
+                }
+            }
+        },
+        update = { textView ->
+            markwon.setMarkdown(textView, markdown)
+        }
+    )
 }
 
 private fun formatTimestamp(timestamp: Long): String {
