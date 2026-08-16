@@ -19,6 +19,7 @@ import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import com.p2pchat.domain.model.ChatRoom
 import com.p2pchat.ui.theme.*
+import androidx.compose.foundation.layout.Arrangement
 
 @Composable
 fun CreateGroupDialog(
