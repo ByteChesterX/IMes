@@ -28,6 +28,9 @@ import com.p2pchat.ui.theme.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.foundation.clickable
+import com.halilibo.richtext.ui.RichText
+import com.halilibo.richtext.markdown.Markdown
 
 @Composable
 fun ChatMessageList(
