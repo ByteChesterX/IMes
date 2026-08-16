@@ -64,7 +64,7 @@ jobs:
 
       - name: Sign Release APK
         if: github.event_name == 'workflow_dispatch' && inputs.build_type == 'release'
-        uses: r2studio/android-sign-action@v1
+        uses: rstudio/android-sign-action@v1.3.1
         with:
           releaseDirectory: P2PChat/app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
