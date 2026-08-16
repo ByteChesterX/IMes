@@ -18,6 +18,11 @@ import com.p2pchat.network.P2PNetworkManager
 import com.p2pchat.ui.components.*
 import kotlinx.coroutines.launch
 import java.util.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.Alignment
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PersonAdd
+import com.p2pchat.ui.theme.* // Tema ve renk tanımlarını çekmek için
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
