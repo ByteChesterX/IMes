@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="discord_dark_bg">#36393F</color>
+    <color name="discord_dark_sidebar">#2F3136</color>
+    <color name="discord_blue">#5865F2</color>
+    <color name="discord_green">#3BA55C</color>
+    <color name="discord_red">#ED4245</color>
+    <color name="text_primary">#DCDDDE</color>
+    <color name="text_secondary">#B9BBBE</color>
+    <color name="text_muted">#72767D</color>
+</resources>
