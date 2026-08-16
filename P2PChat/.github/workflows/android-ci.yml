@@ -5,6 +5,26 @@ on:
     branches: [ "main", "develop" ]
   pull_request:
     branches: [ "main", "develop" ]
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build type (debug/release)'
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+          - debug
+          - release
+      run_tests:
+        description: 'Run tests'
+        required: false
+        default: true
+        type: boolean
+      run_lint:
+        description: 'Run lint'
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   build:
@@ -27,19 +47,34 @@ jobs:
       run: ./gradlew build
       
     - name: Run tests
+      if: github.event_name == 'workflow_dispatch' && inputs.run_tests == true || github.event_name != 'workflow_dispatch'
       run: ./gradlew test
       
     - name: Build debug APK
+      if: github.event_name != 'workflow_dispatch' || inputs.build_type == 'debug'
       run: ./gradlew assembleDebug
       
-    - name: Upload APK artifact
+    - name: Build release APK
+      if: github.event_name == 'workflow_dispatch' && inputs.build_type == 'release'
+      run: ./gradlew assembleRelease
+      
+    - name: Upload debug APK artifact
+      if: github.event_name != 'workflow_dispatch' || inputs.build_type == 'debug'
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
         path: app/build/outputs/apk/debug/app-debug.apk
         
+    - name: Upload release APK artifact
+      if: github.event_name == 'workflow_dispatch' && inputs.build_type == 'release'
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-release
+        path: app/build/outputs/apk/release/app-release.apk
+        
   lint:
     runs-on: ubuntu-latest
+    if: github.event_name != 'workflow_dispatch' || inputs.run_lint == true
     
     steps:
     - name: Checkout code
