@@ -89,22 +89,24 @@ class P2PNetworkManager(private val context: Context) {
         registerService()
     }
     
-    private fun handleIncomingMessages(socket: Socket, onMessageReceived: (ByteArray) -> Unit) {
-        try {
-            val inputStream = socket.getInputStream()
-            val buffer = ByteArray(4096)
-            var bytesRead: Int
-            
-            while (socket.isConnected && (inputStream.read(buffer).also { bytesRead = it }) != -1) {
-                if (bytesRead > 0) {
-                    val data = buffer.copyOf(bytesRead)
-                    onMessageReceived(data)
-                }
+  private fun handleIncomingMessages(socket: Socket, onMessageReceived: (ByteArray) -> Unit) {
+    try {
+        val inputStream = socket.getInputStream()
+        val buffer = ByteArray(4096)
+        var bytesRead: Int // 1. Değişkeni burada var ile tanımlıyoruz
+
+        // 2. Döngüden önceki hatalı "if (bytesRead > 0)" satırını SİLİNİZ.
+
+        while (socket.isConnected && (inputStream.read(buffer).also { bytesRead = it }) != -1) {
+            if (bytesRead > 0) {
+                val data = buffer.copyOf(bytesRead)
+                onMessageReceived(data)
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error reading from socket", e)
         }
+    } catch (e: Exception) {
+        Log.e(TAG, "Error reading from socket", e)
     }
+}
     
     fun connectToPeer(host: String, port: Int = SERVER_PORT, onMessageReceived: (ByteArray) -> Unit): Boolean {
         return try {
