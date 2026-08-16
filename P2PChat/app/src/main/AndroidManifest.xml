@@ -25,6 +25,9 @@
     
     <!-- Camera for profile photos -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature 
+        android:name="android.hardware.camera" 
+        android:required="false" />
     
     <!-- Foreground service for background connections -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
