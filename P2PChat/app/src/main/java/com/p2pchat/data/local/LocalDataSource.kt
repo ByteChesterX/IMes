@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.coroutines.flow.first
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "p2pchat_prefs")
 
