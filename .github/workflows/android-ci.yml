@@ -39,7 +39,10 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        
+
+    - name: Enter workspace
+      run: cd P2PChat
+    
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
       
