@@ -71,9 +71,9 @@ dependencies {
     // Coil for image loading
     implementation("io.coil-kt:coil-compose:2.5.0")
     
-    // Markdown support
-    implementation("com.halilibo.richtext:richtext-ui:0.19.0")
-    implementation("com.halilibo.richtext:richtext-commonmark:0.19.0")
+    // Markdown support - Using alternative library
+    implementation("io.noties.markwon:core:4.6.2")
+    implementation("io.noties.markwon:editor:4.6.2")
     
     // DataStore for local storage
     implementation("androidx.datastore:datastore-preferences:1.0.0")
