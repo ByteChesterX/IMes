@@ -41,8 +41,11 @@ jobs:
         distribution: 'temurin'
         
     - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      run: chmod +x ./gradlew
       
+    - name: Verify gradlew exists
+      run: ls -la ./gradlew
+
     - name: Build with Gradle
       run: ./gradlew build
       
@@ -87,7 +90,10 @@ jobs:
         distribution: 'temurin'
         
     - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      run: chmod +x ./gradlew
+
+    - name: Verify gradlew exists
+      run: ls -la ./gradlew
       
     - name: Run lint
       run: ./gradlew lint
