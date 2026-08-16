@@ -12,12 +12,24 @@ android {
         applicationId = "com.p2pchat"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = System.getenv("ORG_GRADLE_PROJECT_versionCode")?.toIntOrNull() ?: 1
+        versionName = System.getenv("ORG_GRADLE_PROJECT_versionName") ?: "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            val storeFileFile = file("release-keystore.jks")
+            if (storeFileFile.exists()) {
+                storeFile = storeFileFile
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
         }
     }
 
@@ -28,6 +40,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     
@@ -95,6 +108,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
+
 configurations.all {
     exclude(group = "com.atlassian.commonmark", module = "commonmark")
 }
